@@ -193,6 +193,23 @@
                 }
             };
 
+            const handleClearQueue = async () => {
+                if (!window.confirm('Are you sure you want to clear all pending orders?')) {
+                    return;
+                }
+                try {
+                    const ordersResult = await window.storage.list('order:', true);
+                    if (ordersResult && ordersResult.keys) {
+                        const deletePromises = ordersResult.keys.map(key =>
+                            window.storage.delete(key, true)
+                        );
+                        await Promise.all(deletePromises);
+                    }
+                } catch (error) {
+                    console.error('Error clearing queue:', error);
+                }
+            };
+
             const incrementOrder = () => setOrderCount(prev => prev + 1);
             const decrementOrder = () => setOrderCount(prev => prev > 1 ? prev - 1 : 1);
 
@@ -256,7 +273,12 @@
                                         <p className="text-sm text-gray-600">Add new orders</p>
                                     </div>
                                 </div>
-                                <button onClick={() => setScreenMode('select')} className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-700 font-medium transition-colors">Switch</button>
+                                <div className="flex items-center gap-3">
+                                    {pendingOrders.length > 0 && (
+                                        <button onClick={handleClearQueue} className="px-4 py-2 bg-red-500 hover:bg-red-600 rounded-lg text-white font-medium transition-colors">Clear Queue</button>
+                                    )}
+                                    <button onClick={() => setScreenMode('select')} className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-700 font-medium transition-colors">Switch</button>
+                                </div>
                             </div>
                         </div>
 
