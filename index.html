@@ -193,8 +193,8 @@
                 }
             };
 
-            const handleClearQueue = async () => {
-                if (!window.confirm('Are you sure you want to clear all pending orders?')) {
+            const handleResetQueue = async () => {
+                if (!window.confirm('Are you sure you want to reset the queue system? This will clear all orders and reset the queue number to 0.')) {
                     return;
                 }
                 try {
@@ -205,8 +205,10 @@
                         );
                         await Promise.all(deletePromises);
                     }
+                    await window.storage.set('queue_number', '0', true);
+                    setQueueNumber(0);
                 } catch (error) {
-                    console.error('Error clearing queue:', error);
+                    console.error('Error resetting queue:', error);
                 }
             };
 
@@ -275,9 +277,7 @@
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-3">
-                                    {pendingOrders.length > 0 && (
-                                        <button onClick={handleClearQueue} className="px-4 py-2 bg-red-500 hover:bg-red-600 rounded-lg text-white font-medium transition-colors">Clear Queue</button>
-                                    )}
+                                    <button onClick={handleResetQueue} className="px-4 py-2 bg-red-500 hover:bg-red-600 rounded-lg text-white font-medium transition-colors">Reset Queue</button>
                                     <button onClick={() => setScreenMode('select')} className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-700 font-medium transition-colors">Switch</button>
                                 </div>
                             </div>
