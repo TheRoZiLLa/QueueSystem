@@ -4,12 +4,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Queue Order System - Chicken Market</title>
+    <title>Ikkyu Chicken - Queue System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
     <script crossorigin
         src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        /* iOS-style glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .glass-dark {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Smooth animations */
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .animate-slide-up {
+            animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .animate-scale-in {
+            animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .animate-bounce-in {
+            animation: bounceIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            70% {
+                transform: scale(0.9);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Button press effect */
+        .btn-press {
+            transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .btn-press:active {
+            transform: scale(0.95);
+        }
+
+        /* Number counter animation */
+        .number-pop {
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* Gradient backgrounds */
+        .bg-ios-orange {
+            background: linear-gradient(135deg, #FF9500 0%, #FF6B00 100%);
+        }
+
+        .bg-ios-red {
+            background: linear-gradient(135deg, #FF3B30 0%, #FF2D55 100%);
+        }
+
+        .bg-ios-green {
+            background: linear-gradient(135deg, #34C759 0%, #30D158 100%);
+        }
+
+        /* Animated gradient background */
+        .animated-bg {
+            background: linear-gradient(-45deg, #ff9500, #ff6b00, #ff3b30, #ff2d55);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Card hover effect */
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Order card stagger animation */
+        .order-card {
+            animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            opacity: 0;
+        }
+
+        .order-card:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .order-card:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .order-card:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .order-card:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+
+        .order-card:nth-child(5) {
+            animation-delay: 0.4s;
+        }
+
+        /* Smooth scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+    </style>
 
     <!-- Firebase for Real-Time Database -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.0/firebase-app-compat.min.js"></script>
@@ -229,32 +422,36 @@
             // Screen Selection
             if (screenMode === 'select') {
                 return (
-                    <div className="min-h-screen bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center p-6">
-                        <div className="max-w-2xl w-full">
-                            <div className="text-center mb-12">
-                                <img src="logo.png" alt="Ikkyu Chicken" className="w-48 h-48 mx-auto mb-6 drop-shadow-2xl" />
-                                <h1 className="text-5xl font-bold text-white mb-4">Ikkyu Chicken Queue System</h1>
-                                <p className="text-xl text-orange-100">Select Your Screen Mode</p>
+                    <div className="min-h-screen animated-bg flex items-center justify-center p-6">
+                        <div className="max-w-2xl w-full animate-fade-in">
+                            <div className="text-center mb-10">
+                                <img src="logo.png" alt="Ikkyu Chicken" className="w-40 h-40 mx-auto mb-6 drop-shadow-2xl animate-bounce-in" style={{ animationDelay: '0.2s' }} />
+                                <h1 className="text-4xl font-bold text-white mb-3 tracking-tight" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.2)' }}>Ikkyu Chicken</h1>
+                                <p className="text-lg text-white/80 font-medium">Queue System</p>
                             </div>
 
-                            <div className="grid md:grid-cols-2 gap-6">
-                                <button onClick={() => setScreenMode('cashier')} className="bg-white hover:bg-orange-50 rounded-3xl p-12 shadow-2xl transition-all transform hover:scale-105 group">
+                            <div className="grid md:grid-cols-2 gap-5">
+                                <button onClick={() => setScreenMode('cashier')} className="glass card-hover btn-press rounded-3xl p-8 animate-slide-up" style={{ animationDelay: '0.3s' }}>
                                     <div className="flex flex-col items-center gap-4">
-                                        <div className="w-24 h-24 bg-orange-500 rounded-full flex items-center justify-center group-hover:bg-orange-600 transition-colors">
+                                        <div className="w-20 h-20 bg-ios-orange rounded-2xl flex items-center justify-center shadow-lg">
                                             <Users />
                                         </div>
-                                        <h2 className="text-3xl font-bold text-gray-800">Cashier</h2>
-                                        <p className="text-gray-600 text-center">Add new orders</p>
+                                        <div>
+                                            <h2 className="text-2xl font-bold text-gray-800">Cashier</h2>
+                                            <p className="text-gray-500 text-sm">Add new orders</p>
+                                        </div>
                                     </div>
                                 </button>
 
-                                <button onClick={() => setScreenMode('kitchen')} className="bg-white hover:bg-red-50 rounded-3xl p-12 shadow-2xl transition-all transform hover:scale-105 group">
+                                <button onClick={() => setScreenMode('kitchen')} className="glass card-hover btn-press rounded-3xl p-8 animate-slide-up" style={{ animationDelay: '0.4s' }}>
                                     <div className="flex flex-col items-center gap-4">
-                                        <div className="w-24 h-24 bg-red-500 rounded-full flex items-center justify-center group-hover:bg-red-600 transition-colors">
+                                        <div className="w-20 h-20 bg-ios-red rounded-2xl flex items-center justify-center shadow-lg">
                                             <ChefHat />
                                         </div>
-                                        <h2 className="text-3xl font-bold text-gray-800">Kitchen</h2>
-                                        <p className="text-gray-600 text-center">View all orders</p>
+                                        <div>
+                                            <h2 className="text-2xl font-bold text-gray-800">Kitchen</h2>
+                                            <p className="text-gray-500 text-sm">View all orders</p>
+                                        </div>
                                     </div>
                                 </button>
                             </div>
@@ -266,59 +463,65 @@
             // Cashier Screen
             if (screenMode === 'cashier') {
                 return (
-                    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50">
-                        <div className="bg-white shadow-md border-b-4 border-orange-500">
-                            <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                    <img src="logo.png" alt="Ikkyu Chicken" className="w-12 h-12 rounded-full" />
+                    <div className="min-h-screen bg-gradient-to-b from-orange-50 via-white to-orange-50">
+                        {/* Floating Bubble Header */}
+                        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-md">
+                            <div className="glass shadow-2xl rounded-full px-4 py-2 flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <img src="logo.png" alt="Ikkyu Chicken" className="w-9 h-9 rounded-full shadow" />
                                     <div>
-                                        <h1 className="text-2xl font-bold text-gray-800">Cashier Screen</h1>
-                                        <p className="text-sm text-gray-600">Add new orders</p>
+                                        <h1 className="text-sm font-bold text-gray-800">Cashier</h1>
+                                        <p className="text-[10px] text-gray-500">Add orders</p>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-3">
-                                    <button onClick={handleResetQueue} className="px-4 py-2 bg-red-500 hover:bg-red-600 rounded-lg text-white font-medium transition-colors">Reset Queue</button>
-                                    <button onClick={() => setScreenMode('select')} className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-700 font-medium transition-colors">Switch</button>
+                                <div className="flex items-center gap-2">
+                                    <button onClick={handleResetQueue} className="px-3 py-1.5 bg-ios-red btn-press rounded-full text-white text-xs font-semibold shadow-lg">Reset</button>
+                                    <button onClick={() => setScreenMode('select')} className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 btn-press rounded-full text-gray-600 text-xs font-semibold">Switch</button>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="max-w-2xl mx-auto px-4 py-6">
-                            <div className="bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl shadow-xl p-6 mb-6 text-center">
-                                <p className="text-white text-lg font-semibold mb-2">Current Queue Number</p>
-                                <div className="text-7xl font-bold text-white mb-2">{queueNumber}</div>
-                                <p className="text-orange-100 text-sm">Next: {queueNumber + 1}</p>
+                        <div className="max-w-md mx-auto px-4 pt-20 pb-6 animate-fade-in">
+                            {/* Queue Number Display */}
+                            <div className="bg-ios-orange rounded-3xl shadow-xl p-6 mb-5 text-center animate-scale-in">
+                                <p className="text-white/80 text-sm font-semibold mb-1 uppercase tracking-wider">Current Queue</p>
+                                <div className="text-8xl font-bold text-white mb-1 number-pop" style={{ textShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>{queueNumber}</div>
+                                <p className="text-white/60 text-sm">Next: {queueNumber + 1}</p>
                             </div>
 
-                            <div className="bg-white rounded-2xl shadow-lg p-6">
-                                <div className="flex items-center gap-3 mb-6">
-                                    <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center text-2xl">🍗</div>
+                            {/* Order Controls */}
+                            <div className="glass rounded-3xl shadow-xl p-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+                                <div className="flex items-center gap-3 mb-5">
+                                    <div className="w-12 h-12 bg-orange-100 rounded-2xl flex items-center justify-center text-2xl shadow-inner">🍗</div>
                                     <div>
-                                        <h2 className="text-xl font-bold text-gray-800">Chicken Stick</h2>
-                                        <p className="text-gray-600 text-sm">Select quantity</p>
+                                        <h2 className="text-lg font-bold text-gray-800">Chicken Stick</h2>
+                                        <p className="text-gray-500 text-xs">Select quantity</p>
                                     </div>
                                 </div>
 
-                                <div className="flex items-center justify-center gap-6 mb-6">
-                                    <button onClick={decrementOrder} className="w-14 h-14 bg-gray-200 hover:bg-gray-300 rounded-xl flex items-center justify-center transition-colors shadow"><Minus /></button>
-                                    <div className="text-5xl font-bold text-orange-600 w-24 text-center">{orderCount}</div>
-                                    <button onClick={incrementOrder} className="w-14 h-14 bg-orange-500 hover:bg-orange-600 rounded-xl flex items-center justify-center transition-colors shadow"><Plus /></button>
+                                <div className="flex items-center justify-center gap-5 mb-5">
+                                    <button onClick={decrementOrder} className="w-14 h-14 bg-gray-100 hover:bg-gray-200 btn-press rounded-2xl flex items-center justify-center shadow-inner"><Minus /></button>
+                                    <div className="text-5xl font-bold text-orange-500 w-20 text-center number-pop">{orderCount}</div>
+                                    <button onClick={incrementOrder} className="w-14 h-14 bg-ios-orange btn-press rounded-2xl flex items-center justify-center shadow-lg text-white"><Plus /></button>
                                 </div>
 
-                                <button onClick={handleAddQueue} className="w-full py-4 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white text-xl font-bold rounded-xl shadow transition-all transform hover:scale-105">Add to Queue</button>
+                                <button onClick={handleAddQueue} className="w-full py-4 bg-ios-orange btn-press text-white text-lg font-bold rounded-2xl shadow-xl hover:shadow-2xl transition-shadow">
+                                    Add to Queue
+                                </button>
                             </div>
 
+                            {/* Recent Orders */}
                             {pendingOrders.length > 0 && (
-                                <div className="mt-6 bg-white rounded-2xl shadow-lg p-4">
-                                    <h3 className="text-lg font-bold text-gray-800 mb-3">Recent Orders</h3>
+                                <div className="mt-5 glass rounded-3xl shadow-lg p-4 animate-slide-up" style={{ animationDelay: '0.2s' }}>
+                                    <h3 className="text-sm font-bold text-gray-600 mb-3 uppercase tracking-wider">Recent Orders</h3>
                                     <div className="space-y-2">
-                                        {pendingOrders.slice(-5).reverse().map((order) => (
-                                            <div key={order.queueNum} className="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
+                                        {pendingOrders.slice(-5).reverse().map((order, index) => (
+                                            <div key={order.queueNum} className="flex items-center justify-between p-3 bg-orange-50/50 rounded-2xl order-card" style={{ animationDelay: `${index * 0.1}s` }}>
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center"><span className="text-white font-bold">{order.queueNum}</span></div>
+                                                    <div className="w-10 h-10 bg-ios-orange rounded-xl flex items-center justify-center shadow"><span className="text-white font-bold text-sm">{order.queueNum}</span></div>
                                                     <span className="text-gray-700 font-medium">Queue #{order.queueNum}</span>
                                                 </div>
-                                                <span className="text-2xl font-bold text-orange-600">{order.items}x 🍗</span>
+                                                <span className="text-lg font-bold text-orange-500">{order.items}x 🍗</span>
                                             </div>
                                         ))}
                                     </div>
@@ -332,60 +535,63 @@
             // Kitchen Screen
             if (screenMode === 'kitchen') {
                 return (
-                    <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50">
-                        <div className="bg-white shadow-md border-b-4 border-red-500">
-                            <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                    <img src="logo.png" alt="Ikkyu Chicken" className="w-12 h-12 rounded-full" />
+                    <div className="min-h-screen bg-gradient-to-b from-red-50 via-white to-orange-50">
+                        {/* Floating Bubble Header */}
+                        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-2xl">
+                            <div className="glass shadow-2xl rounded-full px-4 py-2 flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <img src="logo.png" alt="Ikkyu Chicken" className="w-9 h-9 rounded-full shadow" />
                                     <div>
-                                        <h1 className="text-2xl font-bold text-gray-800">Kitchen Screen</h1>
-                                        <p className="text-sm text-gray-600">All pending orders</p>
+                                        <h1 className="text-sm font-bold text-gray-800">Kitchen</h1>
+                                        <p className="text-[10px] text-gray-500">Pending orders</p>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-4">
-                                    <div className="text-right">
-                                        <p className="text-sm text-gray-600">Total Orders</p>
-                                        <p className="text-2xl font-bold text-red-600">{pendingOrders.length}</p>
+                                <div className="flex items-center gap-3">
+                                    <div className="flex items-center gap-2">
+                                        <div className="text-center px-3 py-1 bg-white/50 rounded-full">
+                                            <p className="text-[10px] text-gray-500">Orders</p>
+                                            <p className="text-base font-bold text-red-500">{pendingOrders.length}</p>
+                                        </div>
+                                        <div className="text-center px-3 py-1 bg-white/50 rounded-full">
+                                            <p className="text-[10px] text-gray-500">Chickens</p>
+                                            <p className="text-base font-bold text-orange-500">{totalItems}</p>
+                                        </div>
                                     </div>
-                                    <div className="text-right">
-                                        <p className="text-sm text-gray-600">Total Chickens</p>
-                                        <p className="text-2xl font-bold text-orange-600">{totalItems}</p>
-                                    </div>
-                                    <button onClick={() => setScreenMode('select')} className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-700 font-medium transition-colors">Switch</button>
+                                    <button onClick={() => setScreenMode('select')} className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 btn-press rounded-full text-gray-600 text-xs font-semibold">Switch</button>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="max-w-7xl mx-auto px-6 py-8">
+                        <div className="max-w-6xl mx-auto px-4 pt-20 pb-6 animate-fade-in">
                             {pendingOrders.length === 0 ? (
-                                <div className="text-center py-20">
-                                    <div className="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-6"><ChefHat /></div>
-                                    <h2 className="text-3xl font-bold text-gray-400 mb-2">No Orders Yet</h2>
-                                    <p className="text-gray-500">Waiting for new orders...</p>
+                                <div className="text-center py-20 animate-scale-in">
+                                    <div className="w-24 h-24 glass rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg"><ChefHat /></div>
+                                    <h2 className="text-2xl font-bold text-gray-300 mb-2">No Orders</h2>
+                                    <p className="text-gray-400">Waiting for new orders...</p>
                                 </div>
                             ) : (
-                                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    {pendingOrders.map((order) => (
-                                        <div key={order.queueNum} className="bg-white rounded-3xl shadow-xl p-8 border-4 border-red-500 hover:shadow-2xl transition-shadow">
-                                            <div className="text-center mb-6">
-                                                <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-red-500 to-orange-500 rounded-full mb-4 shadow-lg">
-                                                    <span className="text-5xl font-bold text-white">{order.queueNum}</span>
+                                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+                                    {pendingOrders.map((order, index) => (
+                                        <div key={order.queueNum} className="glass card-hover rounded-3xl p-6 border-2 border-orange-200 animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
+                                            <div className="text-center mb-4">
+                                                <div className="inline-flex items-center justify-center w-20 h-20 bg-ios-orange rounded-2xl mb-3 shadow-xl">
+                                                    <span className="text-4xl font-bold text-white">{order.queueNum}</span>
                                                 </div>
-                                                <h3 className="text-2xl font-bold text-gray-800">Queue #{order.queueNum}</h3>
+                                                <h3 className="text-xl font-bold text-gray-800">Queue #{order.queueNum}</h3>
                                             </div>
 
-                                            <div className="bg-orange-50 rounded-2xl p-6 mb-6">
+                                            <div className="bg-orange-50 rounded-2xl p-4 mb-4">
                                                 <div className="flex items-center justify-center gap-3">
-                                                    <span className="text-6xl">🍗</span>
+                                                    <span className="text-4xl">🍗</span>
                                                     <div className="text-center">
-                                                        <p className="text-gray-600 text-sm">Chicken Sticks</p>
-                                                        <p className="text-5xl font-bold text-orange-600">{order.items}</p>
+                                                        <p className="text-gray-500 text-xs">Chicken Sticks</p>
+                                                        <p className="text-4xl font-bold text-orange-500">{order.items}</p>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <button onClick={() => handleCompleteOrder(order.queueNum)} className="w-full py-4 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl transition-colors flex items-center justify-center gap-2 shadow-lg">
-                                                <Check />Complete Order
+                                            <button onClick={() => handleCompleteOrder(order.queueNum)} className="w-full py-3 bg-ios-green btn-press text-white font-bold rounded-xl shadow-lg flex items-center justify-center gap-2">
+                                                <Check />Done
                                             </button>
                                         </div>
                                     ))}
