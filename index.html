@@ -318,7 +318,9 @@
             const [queueNumber, setQueueNumber] = useState(0);
             const [orderCount, setOrderCount] = useState(1);
             const [orders, setOrders] = useState([]);
+            const [history, setHistory] = useState([]);
             const [loading, setLoading] = useState(true);
+            const PRICE_PER_ITEM = 10; // 10 baht per chicken stick
 
             useEffect(() => {
                 loadData();
@@ -351,6 +353,20 @@
                             .sort((a, b) => a.queueNum - b.queueNum);
                         setOrders(loadedOrders);
                     }
+
+                    // Load history
+                    const historyResult = await window.storage.list('history:', true);
+                    if (historyResult && historyResult.keys) {
+                        const historyPromises = historyResult.keys.map(key =>
+                            window.storage.get(key, true)
+                        );
+                        const historyResults = await Promise.all(historyPromises);
+                        const loadedHistory = historyResults
+                            .filter(r => r && r.value)
+                            .map(r => JSON.parse(r.value))
+                            .sort((a, b) => b.completedAt - a.completedAt);
+                        setHistory(loadedHistory);
+                    }
                 } catch (error) {
                     console.log('Loading data:', error);
                 } finally {
@@ -380,6 +396,19 @@
 
             const handleCompleteOrder = async (queueNum) => {
                 try {
+                    // Find the order to get its details
+                    const order = orders.find(o => o.queueNum === queueNum);
+                    if (order) {
+                        // Save to history
+                        const historyEntry = {
+                            queueNum: order.queueNum,
+                            items: order.items,
+                            price: order.items * PRICE_PER_ITEM,
+                            completedAt: Date.now()
+                        };
+                        await window.storage.set(`history:${Date.now()}`, JSON.stringify(historyEntry), true);
+                    }
+                    // Delete from pending orders
                     await window.storage.delete(`order:${queueNum}`, true);
                 } catch (error) {
                     console.error('Error completing order:', error);
@@ -450,34 +479,48 @@
             if (screenMode === 'select') {
                 return (
                     <div className="min-h-screen animated-bg flex items-center justify-center p-6">
-                        <div className="max-w-2xl w-full">
+                        <div className="max-w-3xl w-full">
                             <div className="text-center mb-10">
                                 <img src="logo.png" alt="Ikkyu Chicken" className="w-40 h-40 mx-auto mb-6 drop-shadow-2xl" />
                                 <h1 className="text-4xl font-bold text-white mb-3 tracking-tight" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.2)' }}>Ikkyu Chicken</h1>
                                 <p className="text-lg text-white/80 font-medium">Queue System</p>
                             </div>
 
-                            <div className="grid md:grid-cols-2 gap-5">
-                                <button onClick={() => setScreenMode('cashier')} className="glass card-hover btn-press rounded-3xl p-8">
-                                    <div className="flex flex-col items-center gap-4">
-                                        <div className="w-20 h-20 bg-ios-orange rounded-2xl flex items-center justify-center shadow-lg">
+                            <div className="grid md:grid-cols-3 gap-5">
+                                <button onClick={() => setScreenMode('cashier')} className="glass card-hover btn-press rounded-3xl p-6">
+                                    <div className="flex flex-col items-center gap-3">
+                                        <div className="w-16 h-16 bg-ios-orange rounded-2xl flex items-center justify-center shadow-lg">
                                             <Users />
                                         </div>
                                         <div>
-                                            <h2 className="text-2xl font-bold text-gray-800">Cashier</h2>
-                                            <p className="text-gray-500 text-sm">Add new orders</p>
+                                            <h2 className="text-xl font-bold text-gray-800">Cashier</h2>
+                                            <p className="text-gray-500 text-xs">Add orders</p>
                                         </div>
                                     </div>
                                 </button>
 
-                                <button onClick={() => setScreenMode('kitchen')} className="glass card-hover btn-press rounded-3xl p-8">
-                                    <div className="flex flex-col items-center gap-4">
-                                        <div className="w-20 h-20 bg-ios-red rounded-2xl flex items-center justify-center shadow-lg">
+                                <button onClick={() => setScreenMode('kitchen')} className="glass card-hover btn-press rounded-3xl p-6">
+                                    <div className="flex flex-col items-center gap-3">
+                                        <div className="w-16 h-16 bg-ios-red rounded-2xl flex items-center justify-center shadow-lg">
                                             <ChefHat />
                                         </div>
                                         <div>
-                                            <h2 className="text-2xl font-bold text-gray-800">Kitchen</h2>
-                                            <p className="text-gray-500 text-sm">View all orders</p>
+                                            <h2 className="text-xl font-bold text-gray-800">Kitchen</h2>
+                                            <p className="text-gray-500 text-xs">View orders</p>
+                                        </div>
+                                    </div>
+                                </button>
+
+                                <button onClick={() => setScreenMode('accounting')} className="glass card-hover btn-press rounded-3xl p-6">
+                                    <div className="flex flex-col items-center gap-3">
+                                        <div className="w-16 h-16 bg-ios-green rounded-2xl flex items-center justify-center shadow-lg">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                <line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h2 className="text-xl font-bold text-gray-800">Accounting</h2>
+                                            <p className="text-gray-500 text-xs">Order history</p>
                                         </div>
                                     </div>
                                 </button>
@@ -635,6 +678,90 @@
                                     ))}
                                 </div>
                             )}
+                        </div>
+                    </div>
+                );
+            }
+
+            // Accounting Screen
+            if (screenMode === 'accounting') {
+                const totalRevenue = history.reduce((sum, h) => sum + h.price, 0);
+                const totalChickens = history.reduce((sum, h) => sum + h.items, 0);
+
+                const formatDate = (timestamp) => {
+                    const date = new Date(timestamp);
+                    return date.toLocaleDateString('th-TH', { day: '2-digit', month: '2-digit', year: '2-digit' }) + ' ' +
+                        date.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+                };
+
+                return (
+                    <div className="min-h-screen bg-gradient-to-b from-green-50 via-white to-green-50">
+                        {/* Floating Bubble Header */}
+                        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-2xl">
+                            <div className="glass shadow-2xl rounded-full px-4 py-2 flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <img src="logo.png" alt="Ikkyu Chicken" className="w-9 h-9 rounded-full shadow" />
+                                    <div>
+                                        <h1 className="text-sm font-bold text-gray-800">Accounting</h1>
+                                        <p className="text-[10px] text-gray-500">Order history</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <div className="text-center px-3 py-1 bg-white/50 rounded-full">
+                                        <p className="text-[10px] text-gray-500">Total</p>
+                                        <p className="text-base font-bold text-green-500">฿{totalRevenue}</p>
+                                    </div>
+                                    <button onClick={() => setScreenMode('select')} className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 btn-press rounded-full text-gray-600 text-xs font-semibold">Switch</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="max-w-2xl mx-auto px-4 pt-20 pb-6 animate-fade-in">
+                            {/* Summary Cards */}
+                            <div className="grid grid-cols-3 gap-3 mb-5">
+                                <div className="glass rounded-2xl p-4 text-center">
+                                    <p className="text-xs text-gray-500 mb-1">Orders</p>
+                                    <p className="text-2xl font-bold text-gray-800">{history.length}</p>
+                                </div>
+                                <div className="glass rounded-2xl p-4 text-center">
+                                    <p className="text-xs text-gray-500 mb-1">Chickens</p>
+                                    <p className="text-2xl font-bold text-orange-500">{totalChickens}</p>
+                                </div>
+                                <div className="glass rounded-2xl p-4 text-center">
+                                    <p className="text-xs text-gray-500 mb-1">Revenue</p>
+                                    <p className="text-2xl font-bold text-green-500">฿{totalRevenue}</p>
+                                </div>
+                            </div>
+
+                            {/* History List */}
+                            <div className="glass rounded-3xl shadow-lg p-4">
+                                <h3 className="text-sm font-bold text-gray-600 mb-3 uppercase tracking-wider">Completed Orders</h3>
+                                {history.length === 0 ? (
+                                    <div className="text-center py-10">
+                                        <p className="text-gray-400">No completed orders yet</p>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-2 max-h-96 overflow-y-auto">
+                                        {history.map((entry, index) => (
+                                            <div key={index} className="flex items-center justify-between p-3 bg-green-50/50 rounded-2xl">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-10 h-10 bg-ios-green rounded-xl flex items-center justify-center shadow">
+                                                        <span className="text-white font-bold text-sm">{entry.queueNum}</span>
+                                                    </div>
+                                                    <div>
+                                                        <span className="text-gray-700 font-medium text-sm">Queue #{entry.queueNum}</span>
+                                                        <p className="text-gray-400 text-xs">{formatDate(entry.completedAt)}</p>
+                                                    </div>
+                                                </div>
+                                                <div className="text-right">
+                                                    <p className="text-sm text-gray-500">{entry.items}x 🍗</p>
+                                                    <p className="text-lg font-bold text-green-500">฿{entry.price}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 );
