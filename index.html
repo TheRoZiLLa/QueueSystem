@@ -325,6 +325,22 @@
             const [sortAsc, setSortAsc] = useState(false); // false = high to low, true = low to high
             const PRICE_PER_ITEM = 10;
 
+            // Calculate price with promotions (buy 5 get 1 free, buy 10 get 2 free)
+            const calculatePromotion = (items) => {
+                let freeItems = 0;
+                if (items === 10) {
+                    freeItems = 2;
+                } else if (items === 5) {
+                    freeItems = 1;
+                }
+                return {
+                    paidItems: items,
+                    freeItems: freeItems,
+                    totalItems: items + freeItems,
+                    price: items * PRICE_PER_ITEM
+                };
+            };
+
             // Translations
             const translations = {
                 th: {
@@ -354,7 +370,9 @@
                     total: 'รวม',
                     revenue: 'รายได้',
                     confirmReset: 'แน่ใจที่จะรีเซ็ตคิวและประวัติ?',
-                    queue: 'คิว'
+                    queue: 'คิว',
+                    freeItems: 'ฟรี',
+                    promotion: 'โปรโมชั่น'
                 },
                 en: {
                     queueSystem: 'Queue System',
@@ -383,7 +401,9 @@
                     total: 'Total',
                     revenue: 'Revenue',
                     confirmReset: 'Reset queue and history?',
-                    queue: 'Queue'
+                    queue: 'Queue',
+                    freeItems: 'FREE',
+                    promotion: 'Promotion'
                 }
             };
             const t = (key) => translations[lang][key] || key;
@@ -465,11 +485,15 @@
                     // Find the order to get its details
                     const order = orders.find(o => o.queueNum === queueNum);
                     if (order) {
-                        // Save to history
+                        // Calculate promotion
+                        const promo = calculatePromotion(order.items);
+                        // Save to history with promotion details
                         const historyEntry = {
                             queueNum: order.queueNum,
-                            items: order.items,
-                            price: order.items * PRICE_PER_ITEM,
+                            items: promo.paidItems,
+                            freeItems: promo.freeItems,
+                            totalItems: promo.totalItems,
+                            price: promo.price,
                             completedAt: Date.now()
                         };
                         await window.storage.set(`history:${Date.now()}`, JSON.stringify(historyEntry), true);
@@ -798,8 +822,13 @@
                                                 <div className="flex items-center justify-center gap-3">
                                                     <span className="text-4xl">🍗</span>
                                                     <div className="text-center">
-                                                        <p className="text-gray-500 text-xs">Chicken Sticks</p>
+                                                        <p className="text-gray-500 text-xs">{t('chickenStick')}</p>
                                                         <p className="text-4xl font-bold text-orange-500">{order.items}</p>
+                                                        {calculatePromotion(order.items).freeItems > 0 && (
+                                                            <div className="mt-2 inline-flex items-center gap-1 px-3 py-1 bg-green-100 rounded-full">
+                                                                <span className="text-green-600 font-bold text-sm">+{calculatePromotion(order.items).freeItems} {t('freeItems')}</span>
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </div>
                                             </div>
@@ -899,7 +928,12 @@
                                                     </div>
                                                 </div>
                                                 <div className="text-right">
-                                                    <p className="text-sm text-gray-500">{entry.items}x 🍗</p>
+                                                    <p className="text-sm text-gray-500">
+                                                        {entry.items}x 🍗
+                                                        {entry.freeItems > 0 && (
+                                                            <span className="text-green-500 font-semibold"> +{entry.freeItems} {t('freeItems')}</span>
+                                                        )}
+                                                    </p>
                                                     <p className="text-lg font-bold text-green-500">฿{entry.price}</p>
                                                 </div>
                                             </div>
