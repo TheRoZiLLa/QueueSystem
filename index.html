@@ -325,19 +325,21 @@
             const [sortAsc, setSortAsc] = useState(false); // false = high to low, true = low to high
             const PRICE_PER_ITEM = 10;
 
-            // Calculate price with promotions (buy 5 get 1 free, buy 10 get 2 free)
+            // Calculate price with promotions (buy 6 get 5 baht discount = 55 baht)
             const calculatePromotion = (items) => {
-                let freeItems = 0;
-                if (items === 10) {
-                    freeItems = 2;
-                } else if (items === 5) {
-                    freeItems = 1;
-                }
+                let discount = 0;
+                // For every 6 items, give 5 baht discount
+                const sixPacks = Math.floor(items / 6);
+                discount = sixPacks * 5;
+                const normalPrice = items * PRICE_PER_ITEM;
                 return {
                     paidItems: items,
-                    freeItems: freeItems,
-                    totalItems: items + freeItems,
-                    price: items * PRICE_PER_ITEM
+                    freeItems: 0,
+                    totalItems: items,
+                    discount: discount,
+                    sixPacks: sixPacks,
+                    originalPrice: normalPrice,
+                    price: normalPrice - discount
                 };
             };
 
@@ -371,8 +373,9 @@
                     revenue: 'รายได้',
                     confirmReset: 'แน่ใจที่จะรีเซ็ตคิวและประวัติ?',
                     queue: 'คิว',
-                    freeItems: 'ฟรี',
-                    promotion: 'โปรโมชั่น'
+                    discount: 'ส่วนลด',
+                    promotion: '6 ไม้ 55 บาท',
+                    originalPrice: 'ราคาปกติ'
                 },
                 en: {
                     queueSystem: 'Queue System',
@@ -402,8 +405,9 @@
                     revenue: 'Revenue',
                     confirmReset: 'Reset queue and history?',
                     queue: 'Queue',
-                    freeItems: 'FREE',
-                    promotion: 'Promotion'
+                    discount: 'Discount',
+                    promotion: '6 sticks 55฿',
+                    originalPrice: 'Original'
                 }
             };
             const t = (key) => translations[lang][key] || key;
@@ -491,7 +495,8 @@
                         const historyEntry = {
                             queueNum: order.queueNum,
                             items: promo.paidItems,
-                            freeItems: promo.freeItems,
+                            freeItems: 0,
+                            discount: promo.discount,
                             totalItems: promo.totalItems,
                             price: promo.price,
                             completedAt: Date.now()
@@ -696,10 +701,10 @@
                             {/* Order Controls */}
                             <div className="glass rounded-3xl shadow-xl p-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
                                 <div className="flex items-center gap-3 mb-5">
-                                    <div className="w-12 h-12 bg-orange-100 rounded-2xl flex items-center justify-center text-2xl shadow-inner">🍗</div>
+                                    <div className="w-12 h-12 bg-orange-100 rounded-2xl flex items-center justify-center overflow-hidden shadow-inner"><img src="chicken.png" alt="chicken" className="w-10 h-10 object-contain" /></div>
                                     <div>
                                         <h2 className="text-lg font-bold text-gray-800">{t('chickenStick')}</h2>
-                                        <p className="text-gray-500 text-xs">{t('selectQuantity')}</p>
+                                        <p className="text-orange-500 text-xs font-semibold">{t('promotion')}</p>
                                     </div>
                                 </div>
 
@@ -820,13 +825,13 @@
 
                                             <div className="bg-orange-50 rounded-2xl p-4 mb-4">
                                                 <div className="flex items-center justify-center gap-3">
-                                                    <span className="text-4xl">🍗</span>
+                                                    <img src="chicken.png" alt="chicken" className="w-16 h-16 object-contain" />
                                                     <div className="text-center">
                                                         <p className="text-gray-500 text-xs">{t('chickenStick')}</p>
                                                         <p className="text-4xl font-bold text-orange-500">{order.items}</p>
-                                                        {calculatePromotion(order.items).freeItems > 0 && (
+                                                        {calculatePromotion(order.items).discount > 0 && (
                                                             <div className="mt-2 inline-flex items-center gap-1 px-3 py-1 bg-green-100 rounded-full">
-                                                                <span className="text-green-600 font-bold text-sm">+{calculatePromotion(order.items).freeItems} {t('freeItems')}</span>
+                                                                <span className="text-green-600 font-bold text-sm">-฿{calculatePromotion(order.items).discount} {t('discount')}</span>
                                                             </div>
                                                         )}
                                                     </div>
@@ -929,9 +934,9 @@
                                                 </div>
                                                 <div className="text-right">
                                                     <p className="text-sm text-gray-500">
-                                                        {entry.items}x 🍗
-                                                        {entry.freeItems > 0 && (
-                                                            <span className="text-green-500 font-semibold"> +{entry.freeItems} {t('freeItems')}</span>
+                                                        {entry.items}x <img src="chicken.png" alt="chicken" className="w-4 h-4 inline-block" />
+                                                        {entry.discount > 0 && (
+                                                            <span className="text-green-500 font-semibold"> (-฿{entry.discount})</span>
                                                         )}
                                                     </p>
                                                     <p className="text-lg font-bold text-green-500">฿{entry.price}</p>
