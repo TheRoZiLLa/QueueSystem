@@ -314,6 +314,12 @@
         );
 
         function QueueOrderSystem() {
+            // Password protection
+            const [isAuthenticated, setIsAuthenticated] = useState(false);
+            const [passwordInput, setPasswordInput] = useState('');
+            const [passwordError, setPasswordError] = useState(false);
+            const TEAM_PASSWORD = 'kuyrai';
+
             const [screenMode, setScreenMode] = useState('select');
             const [queueNumber, setQueueNumber] = useState(0);
             const [orderCount, setOrderCount] = useState(1);
@@ -333,6 +339,30 @@
             const [kitchenTab, setKitchenTab] = useState('storefront'); // 'storefront' or 'preorder'
             const [accountingTab, setAccountingTab] = useState('storefront'); // 'storefront' or 'preorder'
             const PRICE_PER_ITEM = 10;
+
+            // Check if already authenticated on mount
+            React.useEffect(() => {
+                const savedAuth = localStorage.getItem('ikkyu_auth');
+                if (savedAuth === TEAM_PASSWORD) {
+                    setIsAuthenticated(true);
+                }
+            }, []);
+
+            const handlePasswordSubmit = () => {
+                if (passwordInput === TEAM_PASSWORD) {
+                    localStorage.setItem('ikkyu_auth', TEAM_PASSWORD);
+                    setIsAuthenticated(true);
+                    setPasswordError(false);
+                } else {
+                    setPasswordError(true);
+                }
+            };
+
+            const handleLogout = () => {
+                localStorage.removeItem('ikkyu_auth');
+                setIsAuthenticated(false);
+                setPasswordInput('');
+            };
 
             // Calculate price with promotions (only 6 sticks = 55 baht)
             const calculatePromotion = (items) => {
@@ -764,6 +794,42 @@
                 return (
                     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 flex items-center justify-center">
                         <div className="text-xl text-gray-600">Loading...</div>
+                    </div>
+                );
+            }
+
+            // Password Login Screen
+            if (!isAuthenticated) {
+                return (
+                    <div className="min-h-screen animated-bg flex items-center justify-center p-6">
+                        <div className="max-w-md w-full animate-fade-in">
+                            <div className="text-center mb-8">
+                                <img src="logo.png" alt="Ikkyu Chicken" className="w-32 h-32 mx-auto mb-4 drop-shadow-2xl" />
+                                <h1 className="text-3xl font-bold text-white mb-2" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.2)' }}>Ikkyu Chicken</h1>
+                                <p className="text-white/80 text-sm">Staff Only</p>
+                            </div>
+                            <div className="glass rounded-3xl shadow-2xl p-8 animate-scale-in">
+                                <h2 className="text-xl font-bold text-gray-800 text-center mb-6">🔒 Team Login</h2>
+                                <input
+                                    type="password"
+                                    value={passwordInput}
+                                    onChange={(e) => { setPasswordInput(e.target.value); setPasswordError(false); }}
+                                    onKeyPress={(e) => e.key === 'Enter' && handlePasswordSubmit()}
+                                    placeholder="Enter password"
+                                    className={`w-full px-4 py-4 bg-gray-50 border-2 rounded-2xl text-gray-800 text-center text-lg font-medium focus:border-red-400 focus:outline-none transition-colors mb-4 ${passwordError ? 'border-red-400' : 'border-gray-200'}`}
+                                />
+                                {passwordError && (
+                                    <p className="text-red-500 text-sm text-center mb-4 font-medium">Wrong password</p>
+                                )}
+                                <button
+                                    onClick={handlePasswordSubmit}
+                                    className="w-full py-4 btn-press text-white text-lg font-bold rounded-2xl shadow-xl"
+                                    style={{ background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)' }}
+                                >
+                                    Login
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 );
             }
