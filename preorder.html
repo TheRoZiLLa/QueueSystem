@@ -95,6 +95,338 @@
         .bg-orange-gradient {
             background: linear-gradient(135deg, #F97316 0%, #FACC15 100%);
         }
+
+        /* Apple-style smooth animations */
+        .animation-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            animation: overlayFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes overlayFadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Paper animation */
+        .order-paper {
+            background: linear-gradient(180deg, #fff 0%, #f9fafb 100%);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            width: 280px;
+        }
+
+        .paper-appear {
+            animation: paperAppear 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes paperAppear {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(-30px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* Paper shrink into ball - smoother round effect */
+        .paper-fold {
+            animation: paperFold 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes paperFold {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+                border-radius: 16px;
+            }
+
+            30% {
+                opacity: 1;
+                transform: scale(0.7);
+                border-radius: 40%;
+            }
+
+            60% {
+                opacity: 1;
+                transform: scale(0.4);
+                border-radius: 50%;
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(0.15);
+                border-radius: 50%;
+            }
+        }
+
+        /* Animation container */
+        .anim-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Glowing orb */
+        .magic-orb {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #F97316 0%, #FBBF24 50%, #F97316 100%);
+            border-radius: 50%;
+            position: relative;
+            box-shadow:
+                0 0 40px rgba(249, 115, 22, 0.6),
+                0 0 80px rgba(251, 191, 36, 0.4),
+                inset 0 -10px 30px rgba(234, 88, 12, 0.4);
+        }
+
+        .orb-appear {
+            animation: orbAppear 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes orbAppear {
+            0% {
+                opacity: 0;
+                transform: scale(0);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .orb-pulse {
+            animation: orbPulse 0.5s ease-in-out 3;
+        }
+
+        @keyframes orbPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .orb-explode {
+            animation: orbExplode 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes orbExplode {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.8;
+                transform: scale(1.8);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(2.5);
+            }
+        }
+
+        /* Mini orbiting orbs */
+        .mini-orb {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            box-shadow: 0 0 15px currentColor;
+        }
+
+        .mini-orb-orbit {
+            animation: miniOrbOrbit 1.5s linear infinite;
+        }
+
+        @keyframes miniOrbOrbit {
+            0% {
+                transform: rotate(0deg) translateX(70px) rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg) translateX(70px) rotate(-360deg);
+            }
+        }
+
+        /* Mini orbs fly away as flakes */
+        .mini-orb-fly {
+            animation: miniOrbFly 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes miniOrbFly {
+            0% {
+                opacity: 1;
+                transform: rotate(var(--angle)) translateX(70px) scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: rotate(var(--angle)) translateX(180px) scale(0.3);
+            }
+        }
+
+        /* Ring burst */
+        .ring-burst {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border: 4px solid #FBBF24;
+            border-radius: 50%;
+            animation: ringBurst 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes ringBurst {
+            0% {
+                opacity: 1;
+                transform: scale(0.5);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(2.5);
+            }
+        }
+
+        /* Success checkmark */
+        .success-circle {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #22C55E 0%, #16A34A 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 20px 60px rgba(34, 197, 94, 0.4);
+        }
+
+        .success-appear {
+            animation: successAppear 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes successAppear {
+            0% {
+                opacity: 0;
+                transform: scale(0) rotate(-45deg);
+            }
+
+            60% {
+                opacity: 1;
+                transform: scale(1.2) rotate(10deg);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        .checkmark-draw {
+            stroke-dasharray: 50;
+            stroke-dashoffset: 50;
+            animation: drawCheck 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.3s forwards;
+        }
+
+        @keyframes drawCheck {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        /* Confetti */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            animation: confettiFall 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes confettiFall {
+            0% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg) scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(100px) rotate(720deg) scale(0.3);
+            }
+        }
+
+        /* Final receipt card */
+        .final-receipt {
+            background: #fff;
+            border-radius: 24px;
+            padding: 32px 24px;
+            width: 320px;
+            max-width: 90vw;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .final-receipt-appear {
+            animation: finalReceiptAppear 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes finalReceiptAppear {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(40px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .receipt-header {
+            text-align: center;
+            padding-bottom: 16px;
+            border-bottom: 2px dashed #e5e7eb;
+        }
+
+        .receipt-body {
+            padding: 16px 0;
+        }
+
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 14px;
+        }
+
+        .receipt-footer {
+            border-top: 2px dashed #e5e7eb;
+            padding-top: 16px;
+            text-align: center;
+        }
     </style>
 
     <!-- Firebase -->
@@ -137,40 +469,525 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState } = React;
+        const { useState, useEffect } = React;
+
+        // Animation Overlay Component - New Magic Orb Animation
+        function AnimationOverlay({ orderData, onComplete, lang }) {
+            const [stage, setStage] = useState(0);
+            // Stages: 0-paper appear, 1-paper fold, 2-orb appear, 3-orb pulse, 4-orb explode, 5-success, 6-final
+
+            const translations = {
+                th: {
+                    preOrder: 'พรีออเดอร์',
+                    name: 'ชื่อ',
+                    quantity: 'จำนวน',
+                    sticks: 'ไม้',
+                    pricePerStick: 'ราคาต่อไม้',
+                    subtotal: 'รวม',
+                    discount: 'ส่วนลด',
+                    total: 'ยอดชำระ',
+                    orderId: 'เลขที่',
+                    thankYou: 'ขอบคุณครับ!',
+                    orderSaved: 'ออเดอร์ถูกบันทึกแล้ว',
+                    viewOrders: 'ดูออเดอร์ของฉัน',
+                    orderAgain: 'ปิด',
+                    baht: '฿'
+                },
+                en: {
+                    preOrder: 'Pre-Order',
+                    name: 'Name',
+                    quantity: 'Quantity',
+                    sticks: 'sticks',
+                    pricePerStick: 'Price/stick',
+                    subtotal: 'Subtotal',
+                    discount: 'Discount',
+                    total: 'Total',
+                    orderId: 'Order #',
+                    thankYou: 'Thank You!',
+                    orderSaved: 'Order has been saved',
+                    viewOrders: 'View My Orders',
+                    orderAgain: 'Close',
+                    baht: '฿'
+                }
+            };
+
+            const t = (key) => translations[lang][key] || key;
+
+            useEffect(() => {
+                // Timings for each stage transition
+                const timings = [800, 1000, 600, 1300, 600, 800];
+                if (stage < 6) {
+                    const timer = setTimeout(() => setStage(s => s + 1), timings[stage]);
+                    return () => clearTimeout(timer);
+                }
+            }, [stage]);
+
+            const formatTime = (timestamp) => {
+                const d = new Date(timestamp);
+                return d.toLocaleTimeString(lang === 'th' ? 'th-TH' : 'en-US', { hour: '2-digit', minute: '2-digit' });
+            };
+
+            const formatDate = (timestamp) => {
+                const d = new Date(timestamp);
+                return d.toLocaleDateString(lang === 'th' ? 'th-TH' : 'en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+            };
+
+            // Generate confetti pieces
+            const confettiColors = ['#F97316', '#FBBF24', '#22C55E', '#3B82F6', '#EC4899', '#8B5CF6'];
+            const confetti = Array.from({ length: 12 }, (_, i) => ({
+                id: i,
+                color: confettiColors[i % confettiColors.length],
+                left: `${20 + Math.random() * 60}%`,
+                delay: `${Math.random() * 0.3}s`,
+                rotate: Math.random() * 360
+            }));
+
+            return (
+                <div className="animation-overlay">
+                    {/* Stage 0-1: Order Paper */}
+                    {stage <= 1 && (
+                        <div className={`order-paper ${stage === 0 ? 'paper-appear' : 'paper-fold'}`}>
+                            <div className="text-center mb-3">
+                                <div className="text-orange-500 font-bold text-lg">{t('preOrder')}</div>
+                                <div className="text-gray-400 text-xs">#{String(orderData.id).slice(-6)}</div>
+                            </div>
+                            <div className="space-y-2 text-sm">
+                                <div className="flex justify-between">
+                                    <span className="text-gray-500">{t('name')}</span>
+                                    <span className="font-semibold text-gray-800">{orderData.name}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-gray-500">{t('quantity')}</span>
+                                    <span className="font-bold text-orange-500">{orderData.items} {t('sticks')}</span>
+                                </div>
+                                <div className="border-t border-dashed border-gray-200 pt-2 mt-2">
+                                    <div className="flex justify-between font-bold">
+                                        <span className="text-gray-600">{t('total')}</span>
+                                        <span className="text-green-600">{t('baht')}{orderData.price}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Stage 2-4: Magic Orb */}
+                    {stage >= 2 && stage <= 4 && (
+                        <div className="anim-container">
+                            {/* 4 Mini orbiting orbs */}
+                            {[0, 1, 2, 3].map(i => (
+                                <div
+                                    key={i}
+                                    className={`mini-orb ${stage === 3 ? 'mini-orb-fly' : 'mini-orb-orbit'}`}
+                                    style={{
+                                        background: i % 2 === 0 ? '#FBBF24' : '#F97316',
+                                        color: i % 2 === 0 ? '#FBBF24' : '#F97316',
+                                        animationDelay: stage === 3 ? `${i * 0.1}s` : `${i * 0.375}s`,
+                                        '--angle': `${i * 90}deg`,
+                                        opacity: stage === 4 ? 0 : 1
+                                    }}
+                                />
+                            ))}
+
+                            {/* Ring burst on explode */}
+                            {stage === 4 && (
+                                <>
+                                    <div className="ring-burst" style={{ animationDelay: '0s' }}></div>
+                                    <div className="ring-burst" style={{ animationDelay: '0.15s' }}></div>
+                                </>
+                            )}
+
+                            {/* The orb */}
+                            <div className={`magic-orb ${stage === 2 ? 'orb-appear' : stage === 3 ? 'orb-pulse' : 'orb-explode'}`}>
+                                {/* Inner glow effect */}
+                                <div style={{
+                                    position: 'absolute',
+                                    inset: '15%',
+                                    background: 'radial-gradient(circle, rgba(255,255,255,0.5) 0%, transparent 60%)',
+                                    borderRadius: '50%'
+                                }}></div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Stage 5: Success Checkmark with Confetti */}
+                    {stage === 5 && (
+                        <div className="anim-container">
+                            {/* Confetti */}
+                            {confetti.map(c => (
+                                <div
+                                    key={c.id}
+                                    className="confetti"
+                                    style={{
+                                        background: c.color,
+                                        left: c.left,
+                                        top: '30%',
+                                        animationDelay: c.delay,
+                                        transform: `rotate(${c.rotate}deg)`
+                                    }}
+                                />
+                            ))}
+
+                            {/* Success circle */}
+                            <div className="success-circle success-appear">
+                                <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                    <polyline className="checkmark-draw" points="20 6 9 17 4 12" />
+                                </svg>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Stage 6: Final Receipt */}
+                    {stage >= 6 && (
+                        <div className="final-receipt final-receipt-appear">
+                            <div className="receipt-header">
+                                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22C55E" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg>
+                                </div>
+                                <h2 className="text-2xl font-bold text-gray-800">{t('thankYou')}</h2>
+                                <p className="text-gray-400 text-sm mt-1">{t('orderSaved')}</p>
+                            </div>
+
+                            <div className="receipt-body">
+                                <div className="receipt-row">
+                                    <span className="text-gray-500">{t('name')}</span>
+                                    <span className="font-semibold text-gray-800">{orderData.name}</span>
+                                </div>
+                                <div className="receipt-row">
+                                    <span className="text-gray-500">{t('quantity')}</span>
+                                    <span className="font-bold text-orange-500">{orderData.items} {t('sticks')}</span>
+                                </div>
+                                <div className="receipt-row">
+                                    <span className="text-gray-500">{t('pricePerStick')}</span>
+                                    <span className="text-gray-800">{t('baht')}10</span>
+                                </div>
+                                <div className="receipt-row">
+                                    <span className="text-gray-500">{t('subtotal')}</span>
+                                    <span className="text-gray-800">{t('baht')}{orderData.items * 10}</span>
+                                </div>
+                                {orderData.discount > 0 && (
+                                    <div className="receipt-row">
+                                        <span className="text-gray-500">{t('discount')}</span>
+                                        <span className="text-green-600 font-semibold">-{t('baht')}{orderData.discount}</span>
+                                    </div>
+                                )}
+                                <div className="receipt-row border-t-2 border-dashed border-gray-200 pt-3 mt-2">
+                                    <span className="font-bold text-gray-800">{t('total')}</span>
+                                    <span className="text-2xl font-bold text-green-600">{t('baht')}{orderData.price}</span>
+                                </div>
+                            </div>
+
+                            <div className="receipt-footer">
+                                <p className="text-gray-400 text-xs mb-4">{formatDate(orderData.timestamp)} • {formatTime(orderData.timestamp)}</p>
+                                <button
+                                    onClick={onComplete}
+                                    className="w-full py-3 btn-press text-white font-bold rounded-xl"
+                                    style={{ background: 'linear-gradient(135deg, #F97316 0%, #EA580C 100%)' }}
+                                >
+                                    {t('orderAgain')}
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // My Orders Component - Two-way sync with Firebase
+        function MyOrders({ lang, onClose }) {
+            const [orders, setOrders] = useState([]);
+            const [loading, setLoading] = useState(true);
+            const [deleteConfirm, setDeleteConfirm] = useState(null);
+
+            const translations = {
+                th: {
+                    myOrders: 'ออเดอร์ของฉัน',
+                    noOrders: 'ยังไม่มีออเดอร์',
+                    sticks: 'ไม้',
+                    pending: 'รอดำเนินการ',
+                    completed: 'เสร็จสิ้น',
+                    processing: 'กำลังทำ',
+                    close: 'ปิด',
+                    baht: '฿',
+                    quantity: 'จำนวน',
+                    discount: 'ส่วนลด',
+                    total: 'รวม',
+                    syncing: 'กำลังโหลด...',
+                    delete: 'ลบ',
+                    confirmDelete: 'ยืนยันการลบ',
+                    confirmDeleteMsg: 'คุณต้องการลบออเดอร์นี้หรือไม่?',
+                    cancel: 'ยกเลิก',
+                    confirm: 'ยืนยัน'
+                },
+                en: {
+                    myOrders: 'My Orders',
+                    noOrders: 'No orders yet',
+                    sticks: 'sticks',
+                    pending: 'Pending',
+                    completed: 'Completed',
+                    processing: 'Processing',
+                    close: 'Close',
+                    baht: '฿',
+                    quantity: 'Quantity',
+                    discount: 'Discount',
+                    total: 'Total',
+                    syncing: 'Loading...',
+                    delete: 'Delete',
+                    confirmDelete: 'Confirm Delete',
+                    confirmDeleteMsg: 'Are you sure you want to delete this order?',
+                    cancel: 'Cancel',
+                    confirm: 'Confirm'
+                }
+            };
+
+            const t = (key) => translations[lang][key] || key;
+
+            // Load orders and sync with Firebase (two-way)
+            useEffect(() => {
+                const saved = localStorage.getItem('ikkyu-preorders');
+                if (!saved) {
+                    setLoading(false);
+                    return;
+                }
+
+                let localOrders = JSON.parse(saved);
+                const unsubscribes = [];
+
+                // Set up Firebase listeners for each order
+                localOrders.forEach(order => {
+                    const ref = database.ref(`preorder:${order.id}`);
+                    ref.on('value', (snapshot) => {
+                        const data = snapshot.val();
+                        if (data === null) {
+                            // Order was deleted from Firebase - remove from localStorage too
+                            const saved = localStorage.getItem('ikkyu-preorders');
+                            if (saved) {
+                                const orders = JSON.parse(saved);
+                                const newOrders = orders.filter(o => o.id !== order.id);
+                                localStorage.setItem('ikkyu-preorders', JSON.stringify(newOrders));
+                                setOrders(newOrders.slice().reverse());
+                            }
+                        } else {
+                            try {
+                                const parsed = JSON.parse(data);
+                                // Update status in localStorage
+                                const saved = localStorage.getItem('ikkyu-preorders');
+                                if (saved) {
+                                    const orders = JSON.parse(saved);
+                                    const idx = orders.findIndex(o => o.id === order.id);
+                                    if (idx !== -1 && parsed.status) {
+                                        orders[idx].status = parsed.status;
+                                        localStorage.setItem('ikkyu-preorders', JSON.stringify(orders));
+                                        setOrders(orders.slice().reverse());
+                                    }
+                                }
+                            } catch (e) { }
+                        }
+                    });
+                    unsubscribes.push(() => ref.off('value'));
+                });
+
+                setOrders(localOrders.reverse());
+                setLoading(false);
+
+                return () => unsubscribes.forEach(unsub => unsub());
+            }, []);
+
+            // Delete order from both localStorage and Firebase
+            const deleteOrder = async (orderId) => {
+                try {
+                    // Delete from Firebase
+                    await database.ref(`preorder:${orderId}`).remove();
+
+                    // Delete from localStorage
+                    const saved = localStorage.getItem('ikkyu-preorders');
+                    if (saved) {
+                        const allOrders = JSON.parse(saved);
+                        const newOrders = allOrders.filter(o => o.id !== orderId);
+                        localStorage.setItem('ikkyu-preorders', JSON.stringify(newOrders));
+                        setOrders(newOrders.slice().reverse());
+                    }
+                } catch (e) {
+                    console.error('Error deleting order:', e);
+                }
+                setDeleteConfirm(null);
+            };
+
+            const formatTime = (timestamp) => {
+                const d = new Date(timestamp);
+                return d.toLocaleTimeString(lang === 'th' ? 'th-TH' : 'en-US', { hour: '2-digit', minute: '2-digit' });
+            };
+
+            const formatDate = (timestamp) => {
+                const d = new Date(timestamp);
+                return d.toLocaleDateString(lang === 'th' ? 'th-TH' : 'en-US', { day: 'numeric', month: 'short' });
+            };
+
+            const getStatusColor = (status) => {
+                switch (status) {
+                    case 'completed': return 'bg-green-100 text-green-700';
+                    case 'processing': return 'bg-blue-100 text-blue-700';
+                    default: return 'bg-yellow-100 text-yellow-700';
+                }
+            };
+
+            return (
+                <div className="animation-overlay" onClick={onClose}>
+                    <div className="final-receipt final-receipt-appear" style={{ maxHeight: '85vh', overflow: 'auto', width: '340px', maxWidth: '95vw' }} onClick={e => e.stopPropagation()}>
+
+                        {/* Show Confirmation OR Orders List */}
+                        {deleteConfirm ? (
+                            // Delete Confirmation View
+                            <div className="text-center py-4">
+                                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#EF4444" strokeWidth="2">
+                                        <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2" />
+                                    </svg>
+                                </div>
+                                <h3 className="text-xl font-bold text-gray-800 mb-2">{t('confirmDelete')}</h3>
+                                <p className="text-gray-500 text-sm mb-6">{t('confirmDeleteMsg')}</p>
+                                <div className="flex gap-3">
+                                    <button
+                                        onClick={() => setDeleteConfirm(null)}
+                                        className="flex-1 py-3 bg-gray-100 text-gray-700 font-semibold rounded-xl hover:bg-gray-200 transition-colors btn-press"
+                                    >
+                                        {t('cancel')}
+                                    </button>
+                                    <button
+                                        onClick={() => deleteOrder(deleteConfirm)}
+                                        className="flex-1 py-3 bg-red-500 text-white font-semibold rounded-xl hover:bg-red-600 transition-colors btn-press"
+                                    >
+                                        {t('confirm')}
+                                    </button>
+                                </div>
+                            </div>
+                        ) : (
+                            // Orders List View
+                            <>
+                                <div className="flex justify-between items-center mb-5">
+                                    <h2 className="text-xl font-bold text-gray-800">{t('myOrders')}</h2>
+                                    <button onClick={onClose} className="text-gray-400 hover:text-gray-600 p-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                            <path d="M18 6L6 18M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                {loading ? (
+                                    <div className="text-center py-12 text-gray-400">
+                                        <div className="w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                                        <p>{t('syncing')}</p>
+                                    </div>
+                                ) : orders.length === 0 ? (
+                                    <div className="text-center py-12 text-gray-400">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="mx-auto mb-4 opacity-40">
+                                            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
+                                            <rect x="9" y="3" width="6" height="4" rx="1" />
+                                        </svg>
+                                        <p className="text-lg">{t('noOrders')}</p>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-4">
+                                        {orders.map(order => (
+                                            <div key={order.id} className="relative">
+                                                {/* Receipt Card */}
+                                                <div className="bg-gradient-to-b from-white to-gray-50 rounded-lg shadow-md overflow-hidden border border-gray-100">
+                                                    {/* Zigzag top */}
+                                                    <div style={{
+                                                        height: '12px',
+                                                        background: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 12'%3E%3Cpath d='M0 12 L10 0 L20 12 L30 0 L40 12 L50 0 L60 12 L70 0 L80 12 L90 0 L100 12' fill='%23F97316'/%3E%3C/svg%3E")`,
+                                                        backgroundSize: '50px 12px'
+                                                    }}></div>
+
+                                                    {/* Receipt Content */}
+                                                    <div className="px-4 py-3">
+                                                        {/* Header */}
+                                                        <div className="text-center border-b border-dashed border-gray-200 pb-3 mb-3">
+                                                            <div className="text-orange-500 font-bold text-sm">IKKYU CHICKEN</div>
+                                                        </div>
+
+                                                        {/* Customer Name */}
+                                                        <div className="text-center mb-3">
+                                                            <div className="font-semibold text-gray-800 text-lg">{order.name}</div>
+                                                            <span className={`text-xs px-2 py-0.5 rounded-full ${getStatusColor(order.status)}`}>
+                                                                {t(order.status)}
+                                                            </span>
+                                                        </div>
+
+                                                        {/* Order Details */}
+                                                        <div className="space-y-1 text-sm border-t border-dashed border-gray-200 pt-3">
+                                                            <div className="flex justify-between">
+                                                                <span className="text-gray-500">{t('quantity')}</span>
+                                                                <span className="font-bold text-orange-500">{order.items} {t('sticks')}</span>
+                                                            </div>
+                                                            {order.discount > 0 && (
+                                                                <div className="flex justify-between">
+                                                                    <span className="text-gray-500">{t('discount')}</span>
+                                                                    <span className="text-green-600">-{t('baht')}{order.discount}</span>
+                                                                </div>
+                                                            )}
+                                                            <div className="flex justify-between pt-2 border-t border-dashed border-gray-200">
+                                                                <span className="font-bold text-gray-800">{t('total')}</span>
+                                                                <span className="font-bold text-xl text-green-600">{t('baht')}{order.price}</span>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Footer */}
+                                                        <div className="text-center text-xs text-gray-400 mt-3 pt-3 border-t border-dashed border-gray-200">
+                                                            {formatDate(order.timestamp)} • {formatTime(order.timestamp)}
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Delete Button */}
+                                                    <button
+                                                        onClick={() => setDeleteConfirm(order.id)}
+                                                        className="w-full py-2 text-red-400 text-sm font-medium hover:bg-red-50 hover:text-red-500 transition-colors border-t border-gray-100 flex items-center justify-center gap-1"
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                            <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2" />
+                                                        </svg>
+                                                        {t('delete')}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </div>
+                </div>
+            );
+        }
 
         function PreOrderPage() {
             const [name, setName] = useState('');
             const [count, setCount] = useState(1);
             const [lang, setLang] = useState('th');
-            const [role, setRole] = useState('student'); // 'student' or 'teacher'
-            const [submitted, setSubmitted] = useState(false);
+            const [role, setRole] = useState('student');
+            const [showAnimation, setShowAnimation] = useState(false);
+            const [animationData, setAnimationData] = useState(null);
             const [submitting, setSubmitting] = useState(false);
             const [showWarning, setShowWarning] = useState(false);
             const [warningMessage, setWarningMessage] = useState('');
+            const [showMyOrders, setShowMyOrders] = useState(false);
 
             const PRICE_PER_ITEM = 10;
 
-            // Calculate price with promotions (every 6 sticks = 5 baht discount)
             const calculatePromotion = (items) => {
                 const sets = Math.floor(items / 6);
                 const discount = sets * 5;
                 const normalPrice = items * PRICE_PER_ITEM;
-                return {
-                    discount: discount,
-                    price: normalPrice - discount
-                };
+                return { discount, price: normalPrice - discount };
             };
 
-            // Validate if name contains grade level keywords
             const hasGradeLevel = (text) => {
                 const gradeKeywords = ['ป.', 'ประถม', 'ประถมศึกษา', 'ม.', 'มัธยม', 'มัธยมศึกษา'];
                 return gradeKeywords.some(keyword => text.includes(keyword));
             };
 
-            // Validate if name contains room info (/ followed by number)
             const hasRoom = (text) => {
-                // Check for "/" followed by at least one digit, or contains "ห้อง"
                 const roomPattern = /\/\d+/;
                 return roomPattern.test(text) || text.includes('ห้อง');
             };
@@ -185,9 +1002,6 @@
                     confirmOrder: 'ยืนยันพรีออเดอร์',
                     discount: 'ส่วนลด',
                     promotion: 'ซื้อครบ 6 ไม้ลด 5 บาท',
-                    thankYou: 'ขอบคุณครับ!',
-                    orderReceived: 'ออเดอร์ของคุณถูกบันทึกแล้ว',
-                    orderAgain: 'สั่งอีกครั้ง',
                     pleaseEnterName: 'กรุณากรอกชื่อ',
                     pleaseEnterGrade: 'กรุณาใส่ระดับชั้นและห้อง',
                     pleaseEnterRoom: 'กรุณาใส่ห้องด้วย',
@@ -195,7 +1009,8 @@
                     exampleTeacher: 'ตัวอย่าง: ครูสมชาย หรือ คุณครูสมหญิง',
                     student: 'นักเรียน',
                     teacher: 'คุณครู',
-                    selectRole: 'เลือกประเภท'
+                    selectRole: 'เลือกประเภท',
+                    myOrders: 'ออเดอร์ของฉัน'
                 },
                 en: {
                     title: 'Pre-order',
@@ -206,9 +1021,6 @@
                     confirmOrder: 'Confirm Pre-order',
                     discount: 'Discount',
                     promotion: 'Every 6 sticks 5฿ discount',
-                    thankYou: 'Thank You!',
-                    orderReceived: 'Your order has been received',
-                    orderAgain: 'Order Again',
                     pleaseEnterName: 'Please enter your name',
                     pleaseEnterGrade: 'Please enter grade level and class',
                     pleaseEnterRoom: 'Please enter room number',
@@ -216,11 +1028,19 @@
                     exampleTeacher: 'Example: Teacher Somchai',
                     student: 'Student',
                     teacher: 'Teacher',
-                    selectRole: 'Select type'
+                    selectRole: 'Select type',
+                    myOrders: 'My Orders'
                 }
             };
 
             const t = (key) => translations[lang][key] || key;
+
+            const saveToLocalStorage = (order) => {
+                const saved = localStorage.getItem('ikkyu-preorders');
+                const orders = saved ? JSON.parse(saved) : [];
+                orders.push(order);
+                localStorage.setItem('ikkyu-preorders', JSON.stringify(orders));
+            };
 
             const handleSubmit = async () => {
                 if (!name.trim()) {
@@ -228,7 +1048,6 @@
                     setShowWarning(true);
                     return;
                 }
-                // Only validate grade and room for students
                 if (role === 'student') {
                     if (!hasGradeLevel(name.trim())) {
                         setWarningMessage('pleaseEnterGrade');
@@ -242,20 +1061,27 @@
                     }
                 }
                 setShowWarning(false);
-
                 setSubmitting(true);
+
                 try {
                     const timestamp = Date.now();
+                    const promo = calculatePromotion(count);
                     const preOrder = {
                         id: timestamp,
                         name: name.trim(),
                         role: role,
                         items: count,
+                        price: promo.price,
+                        discount: promo.discount,
                         status: 'pending',
                         timestamp: timestamp
                     };
+
                     await window.storage.set(`preorder:${timestamp}`, JSON.stringify(preOrder), true);
-                    setSubmitted(true);
+                    saveToLocalStorage(preOrder);
+
+                    setAnimationData(preOrder);
+                    setShowAnimation(true);
                 } catch (error) {
                     console.error('Error submitting pre-order:', error);
                     alert('Error submitting order. Please try again.');
@@ -264,42 +1090,16 @@
                 }
             };
 
-            const handleOrderAgain = () => {
+            const handleAnimationComplete = () => {
+                setShowAnimation(false);
+                setAnimationData(null);
                 setName('');
                 setCount(1);
                 setRole('student');
-                setSubmitted(false);
-                setShowWarning(false);
             };
 
             const increment = () => setCount(prev => prev + 1);
             const decrement = () => setCount(prev => prev > 1 ? prev - 1 : 1);
-
-            // Success Screen
-            if (submitted) {
-                return (
-                    <div className="min-h-screen bg-orange-gradient flex items-center justify-center p-6">
-                        <div className="max-w-md w-full animate-fade-in">
-                            <div className="glass rounded-3xl shadow-2xl p-8 text-center animate-bounce-in">
-                                <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#22C55E" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                                        <polyline points="20 6 9 17 4 12" />
-                                    </svg>
-                                </div>
-                                <h1 className="text-3xl font-bold text-gray-800 mb-2">{t('thankYou')}</h1>
-                                <p className="text-gray-500 mb-8">{t('orderReceived')}</p>
-                                <button
-                                    onClick={handleOrderAgain}
-                                    className="w-full py-4 btn-press text-white text-lg font-bold rounded-2xl shadow-xl"
-                                    style={{ background: 'linear-gradient(135deg, #F97316 0%, #EA580C 100%)' }}
-                                >
-                                    {t('orderAgain')}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                );
-            }
 
             return (
                 <div className="min-h-screen bg-orange-gradient flex items-center justify-center p-6">
@@ -309,6 +1109,18 @@
                             <button onClick={() => setLang('th')} className={`px-3 py-1.5 rounded-full text-sm font-semibold btn-press transition-all ${lang === 'th' ? 'bg-white shadow text-gray-800' : 'text-gray-600'}`}>🇹🇭 TH</button>
                             <button onClick={() => setLang('en')} className={`px-3 py-1.5 rounded-full text-sm font-semibold btn-press transition-all ${lang === 'en' ? 'bg-white shadow text-gray-800' : 'text-gray-600'}`}>🇺🇸 EN</button>
                         </div>
+                    </div>
+
+                    {/* My Orders Button */}
+                    <div className="fixed top-4 left-4 z-50">
+                        <button onClick={() => setShowMyOrders(true)} className="glass rounded-full px-4 py-2 shadow-lg flex items-center gap-2 btn-press">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
+                                <rect x="9" y="3" width="6" height="4" rx="1" />
+                                <path d="M9 12h6M9 16h6" />
+                            </svg>
+                            <span className="text-sm font-semibold text-gray-700">{t('myOrders')}</span>
+                        </button>
                     </div>
 
                     <div className="max-w-md w-full animate-fade-in">
@@ -403,6 +1215,20 @@
                             </button>
                         </div>
                     </div>
+
+                    {/* Animation Overlay */}
+                    {showAnimation && animationData && (
+                        <AnimationOverlay
+                            orderData={animationData}
+                            onComplete={handleAnimationComplete}
+                            lang={lang}
+                        />
+                    )}
+
+                    {/* My Orders Modal */}
+                    {showMyOrders && (
+                        <MyOrders lang={lang} onClose={() => setShowMyOrders(false)} />
+                    )}
                 </div>
             );
         }
