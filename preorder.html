@@ -146,19 +146,32 @@
             const [submitted, setSubmitted] = useState(false);
             const [submitting, setSubmitting] = useState(false);
             const [showWarning, setShowWarning] = useState(false);
+            const [warningMessage, setWarningMessage] = useState('');
 
             const PRICE_PER_ITEM = 10;
 
+            // Calculate price with promotions (every 6 sticks = 5 baht discount)
             const calculatePromotion = (items) => {
-                let discount = 0;
-                if (items === 6) {
-                    discount = 5;
-                }
+                const sets = Math.floor(items / 6);
+                const discount = sets * 5;
                 const normalPrice = items * PRICE_PER_ITEM;
                 return {
                     discount: discount,
                     price: normalPrice - discount
                 };
+            };
+
+            // Validate if name contains grade level keywords
+            const hasGradeLevel = (text) => {
+                const gradeKeywords = ['ป.', 'ประถม', 'ประถมศึกษา', 'ม.', 'มัธยม', 'มัธยมศึกษา'];
+                return gradeKeywords.some(keyword => text.includes(keyword));
+            };
+
+            // Validate if name contains room info (/ followed by number)
+            const hasRoom = (text) => {
+                // Check for "/" followed by at least one digit, or contains "ห้อง"
+                const roomPattern = /\/\d+/;
+                return roomPattern.test(text) || text.includes('ห้อง');
             };
 
             const translations = {
@@ -170,11 +183,14 @@
                     chickenStick: 'ไก่ปิ้ง',
                     confirmOrder: 'ยืนยันพรีออเดอร์',
                     discount: 'ส่วนลด',
-                    promotion: '6 ไม้ 55 บาท',
+                    promotion: 'ซื้อครบ 6 ไม้ลด 5 บาท',
                     thankYou: 'ขอบคุณครับ!',
                     orderReceived: 'ออเดอร์ของคุณถูกบันทึกแล้ว',
                     orderAgain: 'สั่งอีกครั้ง',
-                    pleaseEnterName: 'กรุณากรอกชื่อ'
+                    pleaseEnterName: 'กรุณากรอกชื่อ',
+                    pleaseEnterGrade: 'กรุณาใส่ระดับชั้นและห้อง',
+                    pleaseEnterRoom: 'กรุณาใส่ห้องด้วย',
+                    exampleName: 'ตัวอย่าง: สมชาย ม.3/1 หรือ สมหญิง ป.5/2'
                 },
                 en: {
                     title: 'Pre-order',
@@ -184,11 +200,14 @@
                     chickenStick: 'Chicken Stick',
                     confirmOrder: 'Confirm Pre-order',
                     discount: 'Discount',
-                    promotion: '6 sticks 55฿',
+                    promotion: 'Every 6 sticks 5฿ discount',
                     thankYou: 'Thank You!',
                     orderReceived: 'Your order has been received',
                     orderAgain: 'Order Again',
-                    pleaseEnterName: 'Please enter your name'
+                    pleaseEnterName: 'Please enter your name',
+                    pleaseEnterGrade: 'Please enter grade level and class',
+                    pleaseEnterRoom: 'Please enter room number',
+                    exampleName: 'Example: Somchai M.3/1 or Somying P.5/2'
                 }
             };
 
@@ -196,6 +215,17 @@
 
             const handleSubmit = async () => {
                 if (!name.trim()) {
+                    setWarningMessage('pleaseEnterName');
+                    setShowWarning(true);
+                    return;
+                }
+                if (!hasGradeLevel(name.trim())) {
+                    setWarningMessage('pleaseEnterGrade');
+                    setShowWarning(true);
+                    return;
+                }
+                if (!hasRoom(name.trim())) {
+                    setWarningMessage('pleaseEnterRoom');
                     setShowWarning(true);
                     return;
                 }
@@ -278,10 +308,11 @@
                         {/* Order Card */}
                         <div className="glass rounded-3xl shadow-2xl p-8 animate-scale-in">
                             {/* Chicken Image */}
-                            <div className="flex justify-center mb-6">
+                            <div className="flex flex-col items-center mb-6">
                                 <div className="w-32 h-32 bg-orange-50 rounded-3xl flex items-center justify-center shadow-inner">
                                     <img src="chicken.png" alt="Chicken" className="w-24 h-24 object-contain drop-shadow-lg" />
                                 </div>
+                                <p className="text-gray-400 text-xs mt-2 text-center">{t('exampleName')}</p>
                             </div>
 
                             {/* Name Input */}
@@ -294,7 +325,7 @@
                                     className={`w-full px-4 py-4 bg-gray-50 border-2 rounded-2xl text-gray-800 text-center text-lg font-medium focus:border-orange-400 focus:outline-none transition-colors ${showWarning ? 'border-red-400' : 'border-gray-200'}`}
                                 />
                                 {showWarning && (
-                                    <p className="text-red-500 text-sm text-center mt-2 font-medium">{t('pleaseEnterName')}</p>
+                                    <p className="text-red-500 text-sm text-center mt-2 font-medium">{t(warningMessage)}</p>
                                 )}
                             </div>
 

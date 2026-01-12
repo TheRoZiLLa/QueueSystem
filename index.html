@@ -364,13 +364,11 @@
                 setPasswordInput('');
             };
 
-            // Calculate price with promotions (only 6 sticks = 55 baht)
+            // Calculate price with promotions (every 6 sticks = 5 baht discount)
             const calculatePromotion = (items) => {
-                let discount = 0;
-                // Only exactly 6 items gets 5 baht discount
-                if (items === 6) {
-                    discount = 5;
-                }
+                // Every 6 items gets 5 baht discount (6=55, 12=110, 18=165, etc.)
+                const sets = Math.floor(items / 6);
+                const discount = sets * 5;
                 const normalPrice = items * PRICE_PER_ITEM;
                 return {
                     paidItems: items,
@@ -413,7 +411,7 @@
                     confirmReset: 'แน่ใจที่จะรีเซ็ตคิวและประวัติ?',
                     queue: 'คิว',
                     discount: 'ส่วนลด',
-                    promotion: '6 ไม้ 55 บาท',
+                    promotion: 'ทุก 6 ไม้ ลด 5 บาท (6=55, 12=110, 18=165)',
                     originalPrice: 'ราคาปกติ',
                     resetHistory: 'ประวัติรีเซ็ต',
                     deleteHistory: 'ลบประวัติ',
@@ -457,7 +455,7 @@
                     confirmReset: 'Reset queue and history?',
                     queue: 'Queue',
                     discount: 'Discount',
-                    promotion: '6 sticks 55฿',
+                    promotion: 'Every 6 sticks -5฿ (6=55, 12=110, 18=165)',
                     originalPrice: 'Original',
                     resetHistory: 'Reset History',
                     deleteHistory: 'Delete History',
@@ -1080,6 +1078,16 @@
                                     <button onClick={decrementOrder} className="w-14 h-14 bg-gray-100 hover:bg-gray-200 btn-press rounded-2xl flex items-center justify-center shadow-inner"><Minus /></button>
                                     <div className="text-5xl font-bold text-orange-500 w-20 text-center number-pop">{orderCount}</div>
                                     <button onClick={incrementOrder} className="w-14 h-14 bg-ios-orange btn-press rounded-2xl flex items-center justify-center shadow-lg text-white"><Plus /></button>
+                                </div>
+
+                                {/* Price Display */}
+                                <div className="text-center mb-5">
+                                    <p className="text-3xl font-bold text-gray-800">฿{calculatePromotion(orderCount).price}</p>
+                                    {calculatePromotion(orderCount).discount > 0 && (
+                                        <div className="mt-2 inline-flex items-center gap-1 px-3 py-1 bg-green-100 rounded-full">
+                                            <span className="text-green-600 font-semibold text-sm">-฿{calculatePromotion(orderCount).discount} {t('discount')}</span>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <button onClick={handleAddQueue} className="w-full py-4 bg-ios-orange btn-press text-white text-lg font-bold rounded-2xl shadow-xl hover:shadow-2xl transition-shadow">
